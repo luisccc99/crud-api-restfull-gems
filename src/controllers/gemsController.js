@@ -127,25 +127,26 @@ async function addImage(req, res) {
         if (err) return res.send(err)
         console.log("file uploaded to cloudinary")
         fs.unlinkSync(file.path)
-        updateImages(_id, img.url)
+        updateImages(_id, img.url, res)
         res.json(img)
     })
 
+    
 }
 
-async function updateImages(_id, url) {
+async function updateImages(_id, url, res) {
     let conceptId = _id;
     let update = url;
     let conceptUpdated = await GemModel.findByIdAndUpdate(conceptId, {
         "$push": {
             "images": update
-      },
+        },
     }, {
         "new": false,
         "upsert": false
     })
-
     res.status(200).send({
         message: conceptUpdated
     })
+
 }
